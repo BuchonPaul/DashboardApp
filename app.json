@@ -19,8 +19,7 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      },
-      "package": "com.paulbuchon.DashboardApp"
+      }
     },
     "web": {
       "bundler": "metro",
@@ -32,14 +31,6 @@
     ],
     "experiments": {
       "typedRoutes": true
-    },
-    "extra": {
-      "router": {
-        "origin": false
-      },
-      "eas": {
-        "projectId": "13ff924f-eb33-464b-90b3-e16019ec1a28"
-      }
     }
   }
 }
