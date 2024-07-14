@@ -1,11 +1,13 @@
-import { Text, StyleSheet, View, ActivityIndicator } from "react-native";
+import React, { useEffect, useState } from "react";
+import { FlatList, ActivityIndicator, StyleSheet } from "react-native";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { Layout, Text } from "@ui-kitten/components";
+import { FuelCard } from "./FuelCard";
 
 export function Fuel() {
-  const [data, setData] = useState<any>(null);
+  const [data, setData] = useState();
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     fetchStations();
@@ -14,29 +16,51 @@ export function Fuel() {
   const fetchStations = async () => {
     try {
       const response = await axios.get(
-        "https://api.prix-carburants.2aaz.fr/station/around/48.2,-2.04?responseFields=Fuels,Price"
+        "https://api.prix-carburants.2aaz.fr/station/around/48.4,-4.4833"
       );
       setData(response.data);
-    } catch (err: any) {
-      setError(err.message || "Something went wrong");
+    } catch (error) {
+      setError("Erreur lors de la récupération des données");
     } finally {
       setLoading(false);
     }
   };
 
   if (loading) {
-    return <ActivityIndicator size="large" color="#0000ff" />;
+    return (
+      <Layout
+        style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+      >
+        <ActivityIndicator size="large" />
+      </Layout>
+    );
   }
 
   if (error) {
-    return <Text style={{ color: "red" }}>{error}</Text>;
+    return (
+      <Layout
+        style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+      >
+        <Text>{error}</Text>
+      </Layout>
+    );
   }
+
   return (
-    <View style={styles.appli}>
-      {data.map((station: any) => (
-        <View key={station.id}>{station.name}</View>
-      ))}
-    </View>
+    <FlatList
+      data={data}
+      keyExtractor={(item) => item.id.toString()}
+      style={styles.appli}
+      nestedScrollEnabled={true}
+      renderItem={({ item }) => (
+        <FuelCard
+          name={item.name}
+          address={`${item.Address.street_line}, ${item.Address.city_line}`}
+          distance={item.Distance.text}
+          fuels={["Gazole", "E85", "SP95-E10", "SP98", "GPLc"]}
+        />
+      )}
+    />
   );
 }
 
@@ -44,6 +68,6 @@ const styles = StyleSheet.create({
   appli: {
     backgroundColor: "orange",
     width: "100%",
-    height: "100%",
+    height: 1000,
   },
 });

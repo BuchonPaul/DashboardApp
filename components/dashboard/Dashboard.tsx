@@ -1,15 +1,30 @@
 import React from "react";
-import { StyleSheet, Text, SafeAreaView, ScrollView, View } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  SafeAreaView,
+  ScrollView,
+  View,
+  useWindowDimensions,
+} from "react-native";
 import { DashboardCard } from "./DashboardCard";
 import { Fuel } from "../appli/Fuel";
 
 export function Dashboard() {
+  const { width } = useWindowDimensions();
+
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView contentContainerStyle={styles.itemsWrap}>
+      <ScrollView
+        contentContainerStyle={{
+          ...styles.itemsWrap,
+          flexDirection: width > 600 ? "row" : "column",
+          height: width > 600 ? "100%" : 2000,
+        }}
+      >
         <View style={{ ...styles.singleItem, flex: 1 }}>
           <View style={{ ...styles.singleItem }}>
-            <DashboardCard appli={<Fuel />} />
+            <DashboardCard appli={<Fuel></Fuel>} />
           </View>
           <View style={{ ...styles.singleItem }}>
             <DashboardCard />
@@ -22,7 +37,12 @@ export function Dashboard() {
           <View style={{ ...styles.singleItem }}>
             <DashboardCard />
           </View>
-          <View style={{ ...styles.singleItem, flexDirection: "row" }}>
+          <View
+            style={{
+              ...styles.singleItem,
+              flexDirection: "row",
+            }}
+          >
             <View style={{ ...styles.singleItem }}>
               <DashboardCard />
             </View>
