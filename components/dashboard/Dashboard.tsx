@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -8,7 +8,7 @@ import {
   useWindowDimensions,
 } from "react-native";
 import { DashboardCard } from "./DashboardCard";
-import { Fuel } from "../appli/Fuel";
+import { Fuel } from "../appli/FuelFinder/Fuel";
 
 export function Dashboard() {
   const { width } = useWindowDimensions();
