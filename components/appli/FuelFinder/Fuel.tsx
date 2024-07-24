@@ -21,9 +21,12 @@ export function Fuel() {
     try {
       setLoading(true); // Set loading to true while fetching data
 
-      const response = await axios.get(
-        `https://api.prix-carburants.2aaz.fr/station/around/${location.coords.latitude},${location.coords.longitude}?responseFields=Hours,Fuels,Price`
-      );
+      const response = await axios.get(`http://localhost:3000/api/stations`, {
+        params: {
+          latitude: location.coords.latitude,
+          longitude: location.coords.longitude,
+        },
+      });
       setData(response.data);
     } catch (error) {
       setError("Erreur lors de la récupération des données");

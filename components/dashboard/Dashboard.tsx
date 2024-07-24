@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { DashboardCard } from "./DashboardCard";
 import { Fuel } from "../appli/FuelFinder/Fuel";
+import { Brocante } from "../appli/BrocanteFinder/Brocante";
 
 export function Dashboard() {
   const { width } = useWindowDimensions();
@@ -24,10 +25,10 @@ export function Dashboard() {
       >
         <View style={{ ...styles.singleItem, flex: 1 }}>
           <View style={{ ...styles.singleItem }}>
-            <DashboardCard appli={<Fuel></Fuel>} />
+            <DashboardCard appli={<Fuel />} />
           </View>
           <View style={{ ...styles.singleItem }}>
-            <DashboardCard />
+            <DashboardCard appli={<Brocante />} />
           </View>
         </View>
         <View style={{ ...styles.singleItem, flex: 2 }}>
