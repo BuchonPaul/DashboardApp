@@ -11,17 +11,16 @@ export const SysVarProvider = ({ children }) => {
   const [detLocation, setDetLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState("");
 
+  const apiAdress = "http://api-server-woad.vercel.app";
+
   const getLocationDetail = async () => {
     try {
-      const response = await axios.get(
-        `http://localhost:3000/api/locationDetails`,
-        {
-          params: {
-            latitude: location.coords.latitude,
-            longitude: location.coords.longitude,
-          },
-        }
-      );
+      const response = await axios.get(apiAdress + `/locationDetails`, {
+        params: {
+          latitude: location.coords.latitude,
+          longitude: location.coords.longitude,
+        },
+      });
       setDetLocation(response.data);
     } catch (error) {
       setErrorMsg(error.message);
@@ -56,7 +55,9 @@ export const SysVarProvider = ({ children }) => {
   };
 
   return (
-    <SysVarContext.Provider value={{ location, detLocation, errorMsg }}>
+    <SysVarContext.Provider
+      value={{ apiAdress, location, detLocation, errorMsg }}
+    >
       {children}
     </SysVarContext.Provider>
   );

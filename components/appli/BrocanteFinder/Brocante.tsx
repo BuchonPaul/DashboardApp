@@ -9,7 +9,7 @@ export function Brocante() {
   const [data, setData] = useState();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const { detLocation } = useContext(SysVarContext);
+  const { detLocation, apiAdress } = useContext(SysVarContext);
 
   useEffect(() => {
     if (detLocation) {
@@ -21,7 +21,7 @@ export function Brocante() {
     try {
       setLoading(true); // Set loading to true while fetching data
 
-      const response = await axios.get(`http://localhost:3000/api/brocantes`, {
+      const response = await axios.get(apiAdress + `/brocantes`, {
         params: {
           departement: parseInt(
             detLocation.features[0].properties.context.match(/^\d+/)[0],

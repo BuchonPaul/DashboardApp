@@ -9,7 +9,7 @@ export function Fuel() {
   const [data, setData] = useState();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const { location } = useContext(SysVarContext);
+  const { apiAdress, location } = useContext(SysVarContext);
 
   useEffect(() => {
     if (location) {
@@ -21,7 +21,7 @@ export function Fuel() {
     try {
       setLoading(true); // Set loading to true while fetching data
 
-      const response = await axios.get(`http://localhost:3000/api/stations`, {
+      const response = await axios.get(apiAdress + `/stations`, {
         params: {
           latitude: location.coords.latitude,
           longitude: location.coords.longitude,
@@ -39,7 +39,12 @@ export function Fuel() {
     // Handle case where location is not yet available
     return (
       <Layout
-        style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+        style={{
+          flex: 1,
+          width: "100%",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
       >
         <Text>Autoriser la Location</Text>
         <ActivityIndicator size="large" />
@@ -51,7 +56,12 @@ export function Fuel() {
     // Handle loading state
     return (
       <Layout
-        style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+        style={{
+          flex: 1,
+          width: "100%",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
       >
         <Text>Récupération des données</Text>
         <ActivityIndicator size="large" />
@@ -63,7 +73,12 @@ export function Fuel() {
     // Handle error state
     return (
       <Layout
-        style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+        style={{
+          flex: 1,
+          width: "100%",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
       >
         <Text>{error}</Text>
       </Layout>
