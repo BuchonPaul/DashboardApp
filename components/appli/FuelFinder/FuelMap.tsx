@@ -18,23 +18,20 @@ import {
   IndexPath,
 } from "@ui-kitten/components";
 import { Marker } from "react-native-maps";
-import MapView from "react-native-maps";
 import { SysVarContext } from "@/hooks/useSysVar";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { Fuel } from "@/constants/Fuels";
 import { Station } from "@/types/Station";
 import useFetchStations from "@/hooks/useFetchStation";
 
 const { width } = Dimensions.get("window");
 
-export function FuelMap() {
+export function FuelMap({ mapRef, setMarkers }) {
   const [filteredData, setFilteredData] = useState<Station[]>([]);
   const [selectedFuelIndex, setSelectedFuelIndex] = useState(1);
 
   const { location } = useContext(SysVarContext);
   const { data, loading, error } = useFetchStations(location);
 
-  const mapRef = useRef<MapView | null>(null);
   const listRef = useRef<FlatList<Station>>(null);
 
   useEffect(() => {
@@ -45,34 +42,15 @@ export function FuelMap() {
     );
   }, [selectedFuelIndex, data]);
 
-  if (!location) {
-    // Handle case where location is not yet available
-    return (
-      <Layout
-        style={{
-          flex: 1,
-          width: "100%",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <Text>Autoriser la Location</Text>
-        <ActivityIndicator size="large" />
-      </Layout>
-    );
-  }
+  useEffect(() => {
+    if (setMarkers && renderMarker) {
+      setMarkers(filteredData.map((station) => renderMarker(station)));
+    }
+  }, [filteredData]);
 
   if (loading) {
-    // Handle loading state
     return (
-      <Layout
-        style={{
-          flex: 1,
-          width: "100%",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
+      <Layout style={styles.loading}>
         <Text>Récupération des données</Text>
         <ActivityIndicator size="large" />
       </Layout>
@@ -80,16 +58,8 @@ export function FuelMap() {
   }
 
   if (error) {
-    // Handle error state
     return (
-      <Layout
-        style={{
-          flex: 1,
-          width: "100%",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
+      <Layout style={styles.error}>
         <Text>{error}</Text>
       </Layout>
     );
@@ -195,7 +165,7 @@ export function FuelMap() {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, width: width }}>
+    <>
       <View style={styles.selectBar}>
         <Layout level="1">
           <Select
@@ -209,33 +179,7 @@ export function FuelMap() {
           </Select>
         </Layout>
       </View>
-      <MapView
-        ref={mapRef}
-        style={styles.map}
-        initialRegion={{
-          latitude: location.coords.latitude,
-          longitude: location.coords.longitude,
-          latitudeDelta: 0.1,
-          longitudeDelta: 0.05,
-        }}
-      >
-        {filteredData.map((station) => renderMarker(station))}
-        <Marker
-          coordinate={{
-            latitude: location.coords.latitude,
-            longitude: location.coords.longitude,
-          }}
-        >
-          <View
-            style={{
-              width: 20,
-              height: 20,
-              backgroundColor: "blue",
-              borderRadius: 20,
-            }}
-          />
-        </Marker>
-      </MapView>
+
       <View style={styles.cardList}>
         <FlatList
           ref={listRef}
@@ -248,11 +192,24 @@ export function FuelMap() {
           decelerationRate="fast"
         ></FlatList>
       </View>
-    </SafeAreaView>
+    </>
   );
 }
 
 const styles = StyleSheet.create({
+  loading: {
+    flex: 1,
+    width: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "transparent",
+  },
+  error: {
+    flex: 1,
+    width: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+  },
   marker: {
     padding: 5,
     borderRadius: 5,
@@ -260,9 +217,6 @@ const styles = StyleSheet.create({
   markerText: {
     fontWeight: "bold",
     color: "white",
-  },
-  map: {
-    ...StyleSheet.absoluteFillObject,
   },
   cardList: {
     position: "absolute",
